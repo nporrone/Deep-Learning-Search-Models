@@ -1,4 +1,4 @@
-k# search.py
+# search.py
 # ---------
 # Licensing Information:  You are free to use or extend these projects for
 # educational purposes provided that (1) you do not distribute or publish
@@ -87,12 +87,49 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    fringe = util.Stack()  # store nodes in the fringe (as a stack) and there paths
+    visited = set()  # Create a set which holds all visited nodes
+    fringe.push((problem.getStartState(), []))  # Store the start node and its path
+
+    while not fringe.isEmpty():  # while that stack is not empty execute
+        current_element = fringe.pop()  # Pop the element you wish to step into from the stack
+        node = current_element[0]  # Store the node from the element in a stack
+        path = current_element[1]  # Store the path from the element in a stack
+        if problem.isGoalState(node):  # check if the node is the goal state
+            break  # Exit the loop, you have found the goal state
+        else:
+            if node not in visited:  # Stack may contain the same node twice so we save run time by skipping
+                visited.add(node)  # add the node to the visted set
+                children = problem.getSuccessors(node)  # store the children of the node
+                for child in children:
+                    pathforchild = path + [child[1]]  # store the path of each child
+                    fringe.push((child[0], pathforchild))  # push child into the fringe
+
+    return path  # list of actions to reach the goal
+
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    fringe = util.Queue()  # store nodes in the fringe(as a queue)
+    visted = set()  # create a set to hold all the visted nodes
+    fringe.push((problem.getStartState(), []))  # Push the starting node and its path to the fringe
+
+    while not fringe.isEmpty():
+        current_element = fringe.pop()  # pop the current element from the stack
+        node = current_element[0]
+        path = current_element[1]
+        if problem.isGoalState(node):  # check if current node is the goal node
+            break  # if it is, break the loop and return the nodes path
+        else:  # if not, check its children
+            if node not in visted:  # check to see if you have visited this node before
+                visted.add(node)  # if you havent, mark the node as visited
+                children = problem.getSuccessors(node)  # store the children of the node
+                for child in children:
+                    pathforchild = path + [child[1]]
+                    fringe.push((child[0], pathforchild))
+
+    return path
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
