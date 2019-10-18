@@ -387,6 +387,9 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
+
+    # The heurstic will be the minium distance to each corner using a manhattan distance
+
     h = 0  # heuristic cost
     current = state[0]  #  current position
     cornersLeft = state[1]  # corners left
@@ -503,21 +506,25 @@ def foodHeuristic(state, problem):
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
 
+    # The heuristic will be the maximum distance
+
     h = 0  # heuristic cost
 
-    listOfFood = foodGrid.asList()
+    listOfFood = foodGrid.asList()  # store the food in a list
     if len(listOfFood) == 0:  # All food is eaten
-        return 0
+        return h
 
-    nextFood = listOfFood[0]
-    maxH = util.manhattanDistance(position, nextFood)
+    nextFood = listOfFood[0]  # pick the next food randomly
+    maxH = util.manhattanDistance(position, nextFood)  # set the max distance of all food
+
+    # go through the list of food and find the true max, set that food as the next food
     for food in listOfFood[1:]:
         cost = util.manhattanDistance(position, food)
         if maxH < cost:
             maxH = cost
             nextFood = food
 
-    h = util.manhattanDistance(position, nextFood)
+    h = util.manhattanDistance(position, nextFood)  # store the true max
 
     return h
 
