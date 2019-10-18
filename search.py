@@ -87,6 +87,7 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
+
     fringe = util.Stack()  # store nodes in the fringe (as a stack) and there paths
     visited = set()  # Create a set which holds all visited nodes
     fringe.push((problem.getStartState(), []))  # Store the start node and its path
@@ -111,11 +112,13 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+
     fringe = util.Queue()  # store nodes in the fringe(as a queue)
     visted = set()  # create a set to hold all the visted nodes
     fringe.push((problem.getStartState(), []))  # Push the starting node and its path to the fringe
 
     while not fringe.isEmpty():
+        
         current_element = fringe.pop()  # pop the current element from the stack
         node = current_element[0]
         path = current_element[1]
@@ -134,7 +137,28 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    fringe = util.PriorityQueue()  # store nodes in the fringe(as a priority queue)
+    visted = set()  # create a set to hold all the visted nodes
+    fringe.push((problem.getStartState(), [], 0), 0)  # Push the starting node and its path to the fringe
+                                                      # along with its cost and its path cost
+    while not fringe.isEmpty():
+        current_element = fringe.pop()  # pop the current element from the stack
+        node = current_element[0]
+        path = current_element[1]
+        cost = current_element[2]
+        if problem.isGoalState(node):  # check if current node is the goal node
+            break  # if it is, break the loop and return the nodes path
+        else:  # if not, check its children
+            if node not in visted:  # check to see if you have visited this node before
+                visted.add(node)  # if you havent, mark the node as visited
+                children = problem.getSuccessors(node)  # store the children of the node
+                for child in children:
+                    pathforchild = path + [child[1]]
+                    fringe.push((child[0], pathforchild, child[2]), cost + child[2])  # push the child with its path
+                                                                                      # cost
+
+    return path
 
 def nullHeuristic(state, problem=None):
     """
@@ -146,8 +170,26 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
-
+    fringe = util.PriorityQueue()  # store nodes in the fringe(as a priority queue)
+    visted = set()  # create a set to hold all the visted nodes
+    fringe.push((problem.getStartState(), [], 0, 0), heuristic(problem.getStartState(), problem) + 0)  # Push the starting node and its path to the fringe
+                                                      # along with its cost and its path cost (w/ heursitics)
+    while not fringe.isEmpty():
+        current_element = fringe.pop()  # pop the current element from the stack
+        node = current_element[0]
+        path = current_element[1]
+        cost = current_element[2]
+        if problem.isGoalState(node):  # check if current node is the goal node
+            break  # if it is, break the loop and return the nodes path
+        else:  # if not, check its children
+            if node not in visted:  # check to see if you have visited this node before
+                visted.add(node)  # if you havent, mark the node as visited
+                children = problem.getSuccessors(node)  # store the children of the node
+                for child in children:
+                    pathforchild = path + [child[1]]
+                    fringe.push((child[0], pathforchild, child[2]), heuristic(child[0], problem) + cost)  # push the child with its path
+                                                                                                   # cost and path cost
+    return path
 
 # Abbreviations
 bfs = breadthFirstSearch
